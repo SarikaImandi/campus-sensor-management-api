@@ -49,6 +49,6 @@ public class RoomResource {
     @Path("/{roomId}")
     public Response deleteRoom(@PathParam("roomId") String roomId) {
         roomService.deleteRoom(roomId);
-        return Response.noContent().build();
+        return Response.ok().build();
     }
 }
