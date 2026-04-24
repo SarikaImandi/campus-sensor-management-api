@@ -433,7 +433,7 @@ All three mappers return structured JSON error bodies rather than plain text or 
 Exposing raw Java stack traces to external API consumers presents several serious security risks:
 
 1. **Technology fingerprinting** – A stack trace reveals the exact framework (Jersey, JAX-RS), Java version, and internal class names. An attacker can use this to look up known CVEs (Common Vulnerabilities and Exposures) for those specific library versions.
-2. **Internal architecture exposure** – Package names and class hierarchies (e.g., `com.mycompany.csa\\\_smartcampus.service.RoomService`) reveal the internal structure of the application, making it easier to craft targeted exploits.
+2. **Internal architecture exposure** – Package names and class hierarchies (e.g., `com.mycompany.csa_smartcampus.service.RoomService`) reveal the internal structure of the application, making it easier to craft targeted exploits.
 3. **File system paths** – Stack traces sometimes include absolute file paths (e.g., `/home/deploy/tomcat/webapps/...`), which can expose server directory structure and aid in path traversal or file inclusion attacks.
 4. **Data leakage** – If an exception is triggered mid-operation, variable values (which may contain partial user data or IDs) can appear in the trace output.
 5. **Aiding brute-force and injection attacks** – Knowing exactly which line and method caused a `NullPointerException` or `IndexOutOfBoundsException` helps an attacker refine malicious inputs to trigger predictable failure states.
