@@ -164,22 +164,21 @@ You should receive a JSON discovery response confirming the API is live.
 
 ### 1. Discovery – Get API Metadata
 
-```bash
-curl -X GET http://localhost:8081/csa_SmartCampus/api/v1/
-     -H "Accept: application/json"
+```PostMan
+GET http://localhost:8081/csa_SmartCampus/api/v1/
 ```
 
 **Expected response (200 OK):**
 
 ```json
 {
-  "version": "1.0",
-  "description": "Smart Campus Monitoring API",
-  "contact": "admin@gmail.com",
-  "resources": {
-    "rooms": "/api/v1/rooms",
-    "sensors": "/api/v1/sensors"
-  }
+    "apiVersion": "1.0",
+    "description": "Smart Campus Monitoring API",
+    "resources": {
+        "rooms": "/api/v1/rooms",
+        "sensors": "/api/v1/sensors"
+    },
+    "adminContact": "admin@gmail.com"
 }
 ```
 
@@ -187,14 +186,14 @@ curl -X GET http://localhost:8081/csa_SmartCampus/api/v1/
 
 ### 2. Create a New Room
 
-```bash
-curl -X POST http://localhost:8081/csa_SmartCampus/api/v1/rooms
-     -H "Content-Type: application/json
-     -d '{
-           "id": "LIB-301",
-           "name": "Library Quiet Study",
-           "capacity": 50
-         }'
+```PostMan
+POST http://localhost:8081/csa_SmartCampus/api/v1/rooms
+
+{
+  "id": "LIB-301",
+  "name": "Library Quiet Study",
+  "capacity": 50
+}
 ```
 
 **Expected response (201 Created):**
@@ -212,16 +211,16 @@ curl -X POST http://localhost:8081/csa_SmartCampus/api/v1/rooms
 
 ### 3. Register a New Sensor (linked to an existing Room)
 
-```bash
-curl -X POST http://localhost:8081/csa_SmartCampus/api/v1/sensors
-     -H "Content-Type: application/json"
-     -d '{
-           "id": "TEMP-001",
-           "type": "Temperature",
-           "status": "ACTIVE",
-           "currentValue": 22.5,
-           "roomId": "LIB-301"
-         }'
+```PostMan
+POST http://localhost:8081/csa_SmartCampus/api/v1/sensors
+
+{
+  "id": "TEMP-001",
+  "type": "Temperature",
+  "status": "ACTIVE",
+  "currentValue": 22.5,
+  "roomId": "LIB-301"
+}
 ```
 
 **Expected response (201 Created):**
@@ -240,9 +239,8 @@ curl -X POST http://localhost:8081/csa_SmartCampus/api/v1/sensors
 
 ### 4. Filter Sensors by Type
 
-```bash
-curl -X GET "http://localhost:8081/csa_SmartCampus/api/v1/sensors?type=Temperature" \\\\
-     -H "Accept: application/json"
+```PostMan
+GET "http://localhost:8081/csa_SmartCampus/api/v1/sensors?type=Temperature" 
 ```
 
 **Expected response (200 OK):**
@@ -263,21 +261,21 @@ curl -X GET "http://localhost:8081/csa_SmartCampus/api/v1/sensors?type=Temperatu
 
 ### 5. Post a New Sensor Reading (and auto-update currentValue)
 
-```bash
-curl -X POST http://localhost:8081/csa_SmartCampus/api/v1/sensors/TEMP-001/readings
-     -H "Content-Type: application/json"
-     -d '{
-           "value": 24.1
-         }'
+```PostMan
+POST http://localhost:8081/csa_SmartCampus/api/v1/sensors/TEMP-001/readings
+
+{
+  "value": 24.1
+}
 ```
 
 **Expected response (201 Created):**
 
 ```json
 {
-  "id": "a3f9c1d2-...",
-  "timestamp": 1714000000000,
-  "value": 24.1
+    "id": "91e0ed60-0f40-4308-a64e-42de90c642f0",
+    "timeStamp": 1777008460410,
+    "value": 24.1
 }
 ```
 
@@ -287,18 +285,16 @@ The parent sensor's `currentValue` is also updated to `24.1`.
 
 ### 6. Attempt to Delete a Room That Still Has Sensors (409 Conflict)
 
-```bash
-curl -X DELETE http://localhost:8081/csa_SmartCampus/api/v1/rooms/LIB-301
-     -H "Accept: application/json"
+```PostMan
+DELETE http://localhost:8081/csa_SmartCampus/api/v1/rooms/LIB-301
 ```
 
 **Expected response (409 Conflict):**
 
 ```json
 {
-  "error": "Room Conflict",
-  "message": "Cannot delete room 'LIB-301' because it still has active sensors assigned to it. Please remove or reassign all sensors before decommissioning this room.",
-  "status": 409
+    "error": "Room Not Empty",
+    "message": "Cannot delete room 'LIB-301': it still has 1 sensor(s) assigned. Please remove all sensors first."
 }
 ```
 
